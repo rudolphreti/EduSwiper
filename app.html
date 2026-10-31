@@ -1,0 +1,614 @@
+<!-- Dodać znaczniki HTML5-->
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+        <meta charset="utf-8">
+        <title>
+                EduSwiper - Szybkie tworzenie schematycznych materiałów
+                dydaktycznych, karty trójdzielne Montessori
+        </title>
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport"
+              content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- http://cristian.sulea.net/blog/disable-browser-caching-with-meta-html-tags/ -->
+        <meta http-equiv="Cache-Control"
+              content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+        <meta name="author" content="">
+        <meta name="publisher" content="">
+        <meta name="copyright" content="">
+        <meta name="robots" content="noindex">
+        <!-- styles -->
+        <link rel="stylesheet" href="js\cropper\cropper.css">
+        <!-- folder powinien się nazywać "components" a nie "js", bo zawiera pliki pisane w róznych językach -->
+        <link rel="stylesheet" href="js\switcher\switcher.css">
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="js\up_btn\up_btn.css">
+        <link rel="stylesheet"
+              href="masking bugs\jumping-image-on-mobile-devices-when-space-or-backspace-is-typed.css">
+        <link rel="stylesheet"
+              href="https://unpkg.com/swiper@7/swiper-bundle.min.css">
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+
+</head>
+
+<body>
+        <div class="swiper-container animation">
+                <div id="slider-buttons">
+                        <div id="close-btn">✖</div>
+                        <img id="full-screen-switcher"
+                             src="images/fullscreen.svg" height="35px">
+                        <img id="darkmode-switcher" src="images\moon.svg"
+                             height="35px">
+                        <div id="slider-font-size">
+                                <p>
+                                        <span data-mlr-text>
+                                                Max. rozmiar
+                                                czcionki:
+                                        </span>
+                                </p>
+                                <input type="number" min="12" step="1"
+                                       pattern="\d*"
+                                       oninput="this.value = this.value.replace(/[^0-9.]/g, ''); 
+                       this.value = this.value.replace(/(\..*)\./g, '$1'); sliderFontSize(this.value)"
+                                       onchange="sliderFontSize(this.value)">
+                        </div>
+                </div>
+                <div class="swiper">
+                        <div class="swiper-wrapper"></div>
+                        <div class="swiper-button-next"></div>
+                        <div class="swiper-button-prev"></div>
+                </div>
+        </div>
+        <header>
+                <div id="page-title">
+                        <a href="app.html">
+                                <div id="main-title">
+                                        <div id="logo-container">
+                                                <img src="images/favicon.png">
+                                                <h2>
+                                                        EduSwiper
+                                                </h2>
+                                        </div>
+                                </div>
+                        </a>
+                        <select id="mbPOCControlsLangDrop"></select>
+                        <div id="prototype-info">
+                                <h3>
+                                        <span data-mlr-text>
+                                                Aplikacja (prototyp) do
+                                                szybkiego tworzenia
+                                                schematycznych materiałów
+                                                dydaktycznych.
+                                        </span>
+                                        <br>
+                                        <span data-mlr-text>
+                                                Obecnie można za jej
+                                                pomocą tworzyć karty trójdzielne
+                                                Montessori w trzech szablonach i
+                                                przeglądać kolekcje za pomocą
+                                                slajdera.
+                                        </span>
+                                </h3>
+                        </div>
+                </div>
+        </header>
+        <nav id="main-menu-container">
+                <div id="main-menu" class="noselect">
+                        <div id="examples-btn"></div>
+                        <div id="creating-btn"></div>
+                </div>
+        </nav>
+        <div id="creating">
+                <nav>
+                        <div id="menu">
+                                <div id="download-pdf" style="display: none">
+                                        <button onClick="downloadPdfFn()">
+                                                <span data-mlr-text>
+                                                        Pobierz
+                                                        PDF
+                                                </span>
+                                        </button>
+                                </div>
+                                <div style="display: none"
+                                     id="select-template-container">
+
+                                        <span data-mlr-text
+                                              class="inner-txt">Szablon:</span>
+
+                                        <select name="select-template"
+                                                id="select-template"
+                                                onchange="selectTemplateFromDropDownList(), dividingLineIfEco(this)">
+                                                <optgroup
+                                                          label="Karty prostokątne">
+                                                        <option
+                                                                value="4onA4ECO">
+                                                                4 na A4 ECO
+                                                        </option>
+                                                </optgroup>
+                                                <optgroup
+                                                          label="Karty kwadratowe">
+                                                        <option value="2onA4">
+                                                                2 na A4 CLASSIC
+                                                        </option>
+                                                        <option
+                                                                value="4onA4classic">
+                                                                4 na A4 CLASSIC
+                                                        </option>
+                                                </optgroup>
+                                        </select>
+                                        <span
+                                              id="control-card-division-container">
+                                                <input type="checkbox"
+                                                       id="control-card-division">
+                                                <label
+                                                       for="control-card-division"><span
+                                                              data-mlr-text="">Brak
+                                                                linii
+                                                                oddzielającej w
+                                                                karcie
+                                                                kontrolnej</span></label></span>
+
+
+                                </div>
+                                <div id="slider-on-btn" style="display: none">
+                                        <button onClick="createSlider()">
+                                                <span data-mlr-text>
+                                                        Pokaz
+                                                        slajdów
+                                                </span>
+                                        </button>
+                                </div>
+                                <!-- labele nie pokrywają sie z guzikami i czasami się nie udaje prawidłowo trafić  -->
+                                <div id="edition-mode-btn"
+                                     style="display: none">
+                                        <span data-mlr-text
+                                              class="inner-txt">Edytuj:</span>
+                                        <!-- <button
+                                                onClick="editionModeSwitcher()"></button> -->
+                                        <label class="switch"
+                                               id="edit-mode-switcher">
+                                                <input type="checkbox">
+                                                <span
+                                                      class="slider round"></span>
+                                        </label>
+                                </div>
+                                <div>
+                                        <input type="file"
+                                               onchange="openProject(this)"
+                                               id="open-project"
+                                               style="width: 173px; margin:10px; display: none"
+                                               accept=".esw">
+                                        <button id="open-project-button">
+                                                <span data-mlr-text>
+                                                        Otwórz
+                                                        projekt ESW...
+                                                </span>
+                                        </button>
+                                </div>
+                                <div style="display: none">
+                                        <button id="save-project">
+                                                <span data-mlr-text>
+                                                        Zapisz
+                                                        jako ESW...
+                                                </span>
+                                        </button>
+                                </div>
+                                <div id="select-font-container"
+                                     style="display: none;padding: 10px;">
+                                        <button id="font-options-switcher"><span
+                                                      data-mlr-text>Czcionka...</span></button>
+                                        <div id="font-options"
+                                             style="box-shadow: none; background: none;display:none">
+                                                <p>
+                                                        <span
+                                                              data-mlr-text>Czcionka:</span>
+                                                </p>
+                                                <select name="fonts"
+                                                        id="select-font"
+                                                        onchange="changeFont(this.value), 
+                                                changeFontSizeForEach(setFontSize.value)">
+                                                        <option value="Calibri">
+                                                                Calibri
+                                                        </option>
+                                                        <option
+                                                                value="Century Gothic">
+                                                                Century
+                                                                Gothic
+                                                        </option>
+                                                        <option value="Times">
+                                                                Times New Roman
+                                                        </option>
+                                                </select>
+                                                <p>
+                                                        <span data-mlr-text>
+                                                                Max.
+                                                                rozmiar:
+                                                        </span>
+                                                </p>
+                                                <input id="font-size"
+                                                       style="width: 40px; margin:10px"
+                                                       value="36" type="number"
+                                                       id="font-size"
+                                                       name="font-size" min="12"
+                                                       max="70" step="1"
+                                                       pattern="\d*"
+                                                       oninput="this.value = this.value.replace(/[^0-9.]/g, ''); 
+                               this.value = this.value.replace(/(\..*)\./g, '$1');"
+                                                       onchange="changeFontSizeForEach(this.value)">
+                                                <div style="box-shadow: none;">
+                                                        <input type="file"
+                                                               id="font-input"
+                                                               style="width: 173px; margin:10px; display: none"
+                                                               onchange="base64convert(this.files)"
+                                                               accept=".ttf, .otf, .woff, .woff2, .svg, .eot">
+                                                        <button>
+                                                                <span
+                                                                      data-mlr-text>
+                                                                        Załaduj
+                                                                        własną
+                                                                        czcionkę...
+                                                                </span>
+                                                        </button>
+                                                </div>
+                                        </div>
+                                </div>
+                                <div id="crop-all-container"
+                                     style="display: none">
+                                        <button id="crop-all-btn"><span
+                                                      data-mlr-text>Kadrowanie...</span></button>
+                                        <div id="crop-all-options"
+                                             style="box-shadow: none; background: none;display:none; padding: 10px;">
+                                                <p style="margin:0">
+                                                        <span data-mlr-text>
+                                                                Kadruj
+                                                                wszystko:
+                                                        </span>
+                                                </p>
+                                                <button
+                                                        onclick="centerWithCroppingForEach()">
+                                                        <span data-mlr-text>
+                                                                Centruj z
+                                                                przycięciem
+                                                        </span>
+                                                </button>
+                                                <button
+                                                        onclick="fitImagesToTheirContainers()">
+                                                        <span data-mlr-text>
+                                                                Dopasuj
+                                                        </span>
+                                                </button>
+                                        </div>
+                                </div>
+                                <div id="save-images-as-zip"
+                                     style="display: none">
+                                        <button onclick="saveImagesAsZip()">
+                                                <span data-mlr-text>
+                                                        Pobierz
+                                                        wszystkie
+                                                        obrazy...
+                                                </span>
+                                        </button>
+                                </div>
+                                <!-- <div style="display: none">
+                                        <form id="destroy-all"
+                                              action="index.html">
+                                                <input type="submit"
+                                                       value="Wyczyść wszystko" />
+                                        </form>
+                                </div> -->
+                                <div id="word-list-operations"
+                                     style="display:none"><button
+                                                id="word-list-operations-btn"><span
+                                                      data-mlr-text="">Operacje
+                                                        na liście
+                                                        słów...</span></button>
+                                        <div id="word-list-operations-options">
+                                                <div
+                                                     id="copy-txt-list-to-clipboard">
+                                                        <button
+                                                                onClick="copyTxtListToClipBoard()">
+                                                                <span
+                                                                      data-mlr-text="">
+                                                                        Kopiuj
+                                                                        listę
+                                                                        słów do
+                                                                        schowka
+                                                                </span>
+                                                        </button>
+                                                </div>
+                                                <!-- <div
+                                                     id="words-list-to-input-container">
+                                                        <button
+                                                                onClick="pasteTxtListTxtAreaSwitch()">
+                                                                <span
+                                                                      data-mlr-text>
+                                                                        Wprowadź
+                                                                        słowa
+                                                                        z listy
+                                                                        do
+                                                                        zestawu...
+                                                                </span>
+                                                        </button>
+                                                </div> -->
+                                        </div>
+                                </div>
+                        </div>
+                </nav>
+                <aside>
+                        <div id="words-list-to-input" style="display:none">
+                                <p><span data-mlr-text="">Wprowadź słowa z listy
+                                                do zestawu:</span></p>
+                                <textarea></textarea>
+                                <button onClick="pasteTxtList()">OK</button>
+                        </div>
+                </aside>
+                <aside>
+                        <div id="messages-during-PDF-creating-container"
+                             style="display:none">
+                                <div id="messages-during-PDF-creating"
+                                     class="message"></div>
+                                <div id="spinner"></div>
+                        </div>
+                </aside>
+                <main id="main-container-parent">
+                        <div id="main-container" active="false">
+                                <div id="set-title" contenteditable="true">
+                                </div>
+                                <div id="first-add-img-input-container"
+                                     class="add-cards-from-image-container"
+                                     style="margin-bottom: 35px;">
+                                        <div>
+                                                <input id="file-input"
+                                                       type="file" multiple
+                                                       style="width: 173px; margin:10px; display: none"
+                                                       accept=".jpg, .jpeg, .webp, .png, .svg, .gif">
+                                                <button>
+                                                        <span data-mlr-text>
+                                                                Dodaj
+                                                                odnośniki
+                                                                na
+                                                                podstawie
+                                                                obrazów
+                                                                +
+                                                        </span>
+                                                </button>
+                                        </div>
+                                </div>
+                                <div id="set-container">
+                                        <div id="edition-mode-cover"
+                                             style="z-index: 0"></div>
+                                        <div id="preview"></div>
+                                </div>
+                        </div>
+                </main>
+                <main>
+                        <div id="initial-drop-zone-container">
+                                <div id="initial-drop-zone">
+                                        <p>
+                                                <span data-mlr-text>
+                                                        Aby utworzyć nowe
+                                                        odnośniki możesz
+                                                        załadować
+                                                        obrazy:
+                                                </span>
+                                        <ul>
+                                                <li>
+                                                        <span data-mlr-text>
+                                                                z
+                                                                dysku
+                                                        </span>
+                                                </li>
+                                                <li>
+                                                        <span data-mlr-text>
+                                                                metodą
+                                                                przeciągnij i
+                                                                upuść
+                                                        </span>
+                                                </li>
+                                                <li>
+                                                        <span data-mlr-text>
+                                                                metodą
+                                                                kopiuj i
+                                                                wklej.
+                                                        </span>
+                                                </li>
+                                                <!-- rozgryź jak się robi cudzysłowia w stringu w obiekcie -->
+                                        </ul>
+                                        </p>
+                                        <div
+                                             id="initial-drop-zone-btn-container">
+                                                <button>
+                                                        <span
+                                                              data-mlr-text>Przeglądaj...</span>
+                                                </button>
+                                        </div>
+                                </div>
+                        </div>
+                </main>
+                <nav>
+                        <div class="add-cards-from-image-container"
+                             style="display: none"
+                             id="add-cards-from-image-bottom-container">
+                                <div>
+                                        <button>
+                                                <span data-mlr-text>
+                                                        Dodaj
+                                                        odnośniki na
+                                                        podstawie
+                                                        obrazów
+                                                        +
+                                                </span>
+                                        </button>
+                                </div>
+                        </div>
+                </nav>
+        </div>
+        <main>
+                <div id="examples" style="display: none">
+                        <!-- <div>
+                                <input type="file"
+                                       onchange="mainMenuSwitch(creatingBtn, examplesBtn, creating, examples);  openProject(this)"
+                                       id="examples-open-project"
+                                       style="width: 173px; margin:10px; display: none"
+                                       accept=".esw">
+                                <button>
+                                        <label for='examples-open-project'><span
+                                                      data-mlr-text>Otwórz
+                                                        projekt...</span></label>
+                                </button>
+                        </div> -->
+                        <div id="examples-message" class="message">
+                                <span data-mlr-text>
+                                        Gotowe zestawy są tymczasowo
+                                        dostępne tylko w języku polskim! Trwają
+                                        prace nad przełącznikiem języka
+                                        zestawu.
+                                </span>
+                        </div>
+                        <ul id="montessori-cards"></ul>
+                        <aside>
+                                <div id="yt-video" class="color-div">
+                                        <!-- <iframe width="1280" height="720"
+                                                src="https://www.youtube.com/embed/WmgWpAGaY5E?autoplay=1&mute=1&origin=http://eduswiper.com"
+                                                title="YouTube video player"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen></iframe> -->
+                                        <iframe width="1280" height="720"
+                                                src="https://www.youtube.com/embed/tf9BXvJmrxA?autoplay=1&mute=1&origin=http://eduswiper.com"
+                                                title="YouTube video player"
+                                                frameborder="0"
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowfullscreen></iframe>
+                                </div>
+                        </aside>
+                </div>
+        </main>
+        <footer>
+                <address>
+                        <div>
+                                <span data-mlr-text>Zapraszamy do:</span>
+                                <ul style="margin-top: 0;">
+                                        <li>
+                                                <span data-mlr-text>
+                                                        naszej grupy na
+                                                        Facebooku (35,7 tys.
+                                                        członków):
+                                                </span>
+                                                <a href="https://www.facebook.com/groups/eduswiper/"
+                                                   target="_blank">facebook.com/groups/eduswiper</a>
+                                        </li>
+                                        <li>
+                                                <span data-mlr-text>strony na
+                                                        Facebooku:
+                                                </span>
+                                                <a href="https://www.facebook.com/eduswiper"
+                                                   target="_blank">
+                                                        facebook.com/eduswiper</a>
+                                        </li>
+                                        <li>
+                                                <span data-mlr-text>
+                                                        kontaktu poprzez e-mail:
+                                                </span>
+                                                contact[at]eduswiper.com
+                                        </li>
+                                </ul>
+
+                        </div>
+                </address>
+                <div>
+                        © 2022 EduSwiper
+                        <br>
+                        <br>
+                </div>
+        </footer>
+        <!-- Uporzadkować w sektorach -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.0/FileSaver.min.js"
+                integrity="sha512-csNcFYJniKjJxRWRV1R7fvnXrycHP6qDR21mgz1ZP55xY5d+aHLfo9/FcGDQLfn2IfngbAHd8LdfsagcCqgTcQ=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/spin.js/2.3.2/spin.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/textfit/2.4.0/textFit.min.js"
+                integrity="sha512-vLs5rAqfvmv/IpN7JustROkGAvjK/L+vgVDFe7KpdtLztqF8mZDfleK2MZj/xuOrWjma0pW+lPCMcBbPKJVC7g=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.0/pdfmake.min.js"></script>
+        <script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+        <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+        <script src="js\cropper\cropper.js"></script>
+        <script src="js\pdfexport\vfs_fonts.js"></script>
+        <!-- <script
+                src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js'></script> -->
+        <!-- po co to jest? -->
+        <!-- <script
+                src='https://cdn.jsdelivr.net/npm/pdfjs-dist@2.0.385/build/pdf.min.js'></script> -->
+        <!-- po co to jest? -->
+        <!-- devtools-->
+        <script src="js\devtools\deleteAllCookies.js"></script>
+        <!-- <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/draggable/1.0.0-beta.9/swappable.min.js"></script> -->
+        <!-- <script
+                src="https://cdn.jsdelivr.net/npm/domurl@2.3.4/url.min.js"></script> -->
+        <!-- po co to jest? -->
+        <script src="js\cookies.js"></script>
+        <script src="js\global.js"></script>
+        <script src="js\main-menu\show-and-hide-options.js"></script>
+        <script
+                src="js\ready-to-use-projects\load-project-from-address-bar.js"></script>
+        <script
+                src="js\ready-to-use-projects\ready-to-use-projects-HTML.js"></script>
+        <script src="js\up_btn\up_btn.js"></script>
+        <script
+                src="masking bugs\jumping-image-on-mobile-devices-when-space-or-backspace-is-typed.js"></script>
+        <script src="js\pdfexport\pdfexport.js"></script>
+
+        <!-- <script src="js\pdfexport\layouts\4inA4.js"></script> -->
+        <script src="js\pdfexport\layouts\4onA4eco.js"></script>
+
+
+        <script src="js\pdfexport\layouts\classic2onA4.js"></script>
+        <script src="js\pdfexport\layouts\classic4onA4.js"></script>
+        <script src="js\fonts.js"></script>
+        <script src="js\cropper-app-functions.js"></script>
+        <script src="js\create-cards-from-images.js"></script>
+        <script src="js\save-and-open\open.js"></script>
+        <script src="js\save-and-open\cardSet.js"></script>
+        <script src="js\message\message.js"></script>
+        <script src="js\pdfexport\vertical-aligment.js"></script>
+        <script src="js\message\spinner.js"></script>
+        <script src="js\save-and-open\save.js"></script>
+        <script src="js\destroy-all.js"></script>
+        <script src="js\creating-cards.js"></script>
+        <script src="js\cardMenu\remove-card.js"></script>
+        <script src="js\cardMenu\clearTxt.js"></script>
+        <script src="js\cropp-all.js"></script>
+        <script src="js\templates.js"></script>
+        <script src="js\pdfexport\endpage.js"></script>
+        <script src="js\drop.js"></script>
+        <!-- <script src='js\pdfexport\layouts\cover.js'></script> -->
+        <script src="js\loadFont.js"></script>
+        <script src="js\txtLists.js"></script>
+        <script src="js\save-images-as-zip.js"></script>
+        <script src="js\edition-mode.js"></script>
+        <script src="js\slider\slider.js"></script>
+        <script src="js\slider\hide-if-idle.js"></script>
+        <script src="js\slider\keyboard-shortcuts.js"></script>
+        <script src="js\slider\fullscreen.js"></script>
+        <script src="js\slider\sliderFontSize.js"></script>
+        <script src="js\slider\darkmode-switcher.js"></script>
+        <script src="js\add-ad.js"></script>
+        <script src="js\cardMenu\change-img.js"></script>
+        <script src="js\language switcher\meta-tags-language.js"></script>
+        <script src="js\main-menu-switch.js"></script>
+        <script src="js\language switcher\language-switcher.js"></script>
+        <script src="js\sorting.js"></script>
+
+
+</body>
+
+</html>

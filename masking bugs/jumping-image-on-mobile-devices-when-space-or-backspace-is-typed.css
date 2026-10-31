@@ -1,0 +1,7 @@
+.fit-txt-container-centering {
+  /*na urządzeniach mobilnych pojawia się dziwny bug*/
+  /*gdy ta klasa jest przypisana podczas wpisywania tekstu, obraz skacze gdy wprowadzana jest spacja lub backspace*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
