@@ -1,0 +1,44 @@
+{
+  "name": "eduswiper-web",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc && vite build",
+    "test": "node --import tsx tests/run.ts",
+    "test:browser": "node --import tsx tests/browser.ts",
+    "test:legacy": "node --import tsx tests/legacy-browser.ts",
+    "test:editor": "node --import tsx tests/editor-browser.ts",
+    "preview": "vite preview --host 127.0.0.1",
+    "format": "prettier --write src tests index.html vite.config.ts tsconfig.json package.json",
+    "format:check": "prettier --check src tests index.html vite.config.ts tsconfig.json package.json"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "dependencies": {
+    "buffer": "6.0.3",
+    "fflate": "0.8.3",
+    "fontkit": "2.0.4",
+    "idb": "8.0.4",
+    "jspdf": "4.2.1",
+    "lucide-react": "1.66.0",
+    "pdfjs-dist": "6.4.299",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/fontkit": "2.0.9",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.1.2",
+    "playwright": "1.64.1",
+    "prettier": "3.9.10",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2",
+    "vite": "8.3.5"
+  },
+  "private": true
+}

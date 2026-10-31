@@ -1,0 +1,40 @@
+name: New web application checks
+on:
+  pull_request:
+    paths: ['web/**', '.github/workflows/web-checks.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm test
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - name: Browser integration checks
+        run: |
+          npm run dev -- --port 5175 > /tmp/eduswiper-vite.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:5175/ > /dev/null; then break; fi
+            sleep 1
+          done
+          npm run test:browser
+          npm run test:legacy
+          npm run test:editor
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web-test-results
+          path: web/test-results/
